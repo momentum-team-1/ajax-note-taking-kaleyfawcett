@@ -1,4 +1,5 @@
 let notesForm = document.querySelector("#note-form")
+let noteList = document.querySelector(".notelist")
 
 
 notesForm.addEventListener ('submit' , function (event) {
@@ -32,13 +33,53 @@ function renderNotes () {
         let listItem = document.createElement ("li")
         listItem.dataset.id = item.id
         listItem.innerText = item.item 
+        let editIcon = document.createElement ('div')
+        editIcon.id = 'edit'
+        editIcon.classList.add ('fa', 'fa-edit', 'mar-l-xs')
+        listItem.appendChild(editIcon)
+        let deleteIcon = document.createElement('span')
+        deleteIcon.id = 'delete'
+        deleteIcon.classList.add('fa', 'fa-trash', 'mar-l-xs')
+        listItem.appendChild(deleteIcon)
         list.appendChild (listItem)
     }
-    let noteList = document.querySelector(".notelist")
     noteList.appendChild (list)
 
     }) 
 }
+
+noteList.addEventListener ('click', function (event) {
+    if (event.target.matches ('#delete')) {
+        deleteNoteItem (event.target.parentElement.dataset.id)
+    }
+})
+
+function deleteNoteItem (noteId) {
+    
+    fetch (`http://localhost:3000/notes/${noteId}` , {
+        method: 'DELETE'
+    })
+        .then (response => response.json ())
+}
+
+noteList.addEventListener ('click' , function (event) {
+    if (event.target.matches ('#edit')) {
+        editNoteItem (event.target.parentElement.dataset.id)
+    }
+})
+
+function editNoteItem (noteText) {
+    fetch (`http://localhost:3000/notes/${noteText}` , {
+        method: 'PATCH' ,
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ item: noteText, done: false, created: moment().format() })
+    })
+        .then (response => response.json ())
+}
+
+
+
+
 
 renderNotes ()
 
