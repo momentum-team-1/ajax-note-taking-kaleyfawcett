@@ -1,7 +1,7 @@
 let notesForm = document.querySelector("#note-form")
 let noteList = document.querySelector(".notelist")
 
-let editInput = document.createElement ("input")
+
 
 
 notesForm.addEventListener ('submit' , function (event) {
@@ -39,7 +39,6 @@ function renderNotes () {
         editIcon.id = 'edit'
         editIcon.classList.add ('fa', 'fa-edit', 'mar-l-xs')
         listItem.appendChild(editIcon)
-        listItem.appendChild (editInput)
         let deleteIcon = document.createElement('span')
         deleteIcon.id = 'delete'
         deleteIcon.classList.add('fa', 'fa-trash', 'mar-l-xs')
@@ -67,17 +66,35 @@ function deleteNoteItem (noteId) {
 
 noteList.addEventListener ('click' , function (event) {
     if (event.target.matches ('#edit')) {
-        editNoteItem (event.target.parentElement.dataset.id)
+        let editInput = document.createElement ("input") 
+        let editTarget = event.target.parentElement
+        let editButton = document.createElement ('button')
+        editInput.classList.add ('editInput')
+        editButton.id = "editButton"
+        editButton.innerText = "Edit Note"
+        editTarget.appendChild (editInput)
+        editTarget.appendChild (editButton)
+    }
+
+})
+
+noteList.addEventListener ('click' , function (event) {
+    if (event.target.matches ('#editButton')) {
+        let editText = document.querySelector ('.editInput')
+        let newText = editText.value 
+        let newTextID = event.target.parentElement.dataset.id 
+        // console.log (newText , newTextID)
+        editNoteItem (newText , newTextID)
     }
 })
 
-function editNoteItem (noteText) {
-    fetch (`http://localhost:3000/notes/${noteText}` , {
+function editNoteItem (newText, newTextID) {
+    fetch (`http://localhost:3000/notes/${newTextID}` , {
         method: 'PATCH' ,
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ item: noteText})
+        body: JSON.stringify({ item: newText})
     })
-        .then (response => response.json ())
+        .then (response => response.json ()) 
 }
 
 
