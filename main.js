@@ -1,6 +1,8 @@
 let notesForm = document.querySelector("#note-form")
 let noteList = document.querySelector(".notelist")
 
+let editInput = document.createElement ("input")
+
 
 notesForm.addEventListener ('submit' , function (event) {
     event.preventDefault()
@@ -33,10 +35,11 @@ function renderNotes () {
         let listItem = document.createElement ("li")
         listItem.dataset.id = item.id
         listItem.innerText = item.item 
-        let editIcon = document.createElement ('div')
+        let editIcon = document.createElement ('span')
         editIcon.id = 'edit'
         editIcon.classList.add ('fa', 'fa-edit', 'mar-l-xs')
         listItem.appendChild(editIcon)
+        listItem.appendChild (editInput)
         let deleteIcon = document.createElement('span')
         deleteIcon.id = 'delete'
         deleteIcon.classList.add('fa', 'fa-trash', 'mar-l-xs')
@@ -72,7 +75,7 @@ function editNoteItem (noteText) {
     fetch (`http://localhost:3000/notes/${noteText}` , {
         method: 'PATCH' ,
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ item: noteText, done: false, created: moment().format() })
+        body: JSON.stringify({ item: noteText})
     })
         .then (response => response.json ())
 }
