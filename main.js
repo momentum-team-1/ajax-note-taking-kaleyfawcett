@@ -2,8 +2,6 @@ let notesForm = document.querySelector("#note-form")
 let noteList = document.querySelector(".notelist")
 
 
-
-
 notesForm.addEventListener ('submit' , function (event) {
     event.preventDefault()
     let noteTextInput = document.querySelector ("#note-text")
@@ -23,6 +21,7 @@ function createNewNote (noteText) {
     .then (response => response.json ()) 
     .then (data => console.log (data))
 }
+
 
 function renderNotes () {
     fetch ("http://localhost:3000/notes" , {
@@ -50,11 +49,13 @@ function renderNotes () {
     }) 
 }
 
+
 noteList.addEventListener ('click', function (event) {
     if (event.target.matches ('#delete')) {
         deleteNoteItem (event.target.parentElement.dataset.id)
     }
 })
+
 
 function deleteNoteItem (noteId) {
     
@@ -63,6 +64,7 @@ function deleteNoteItem (noteId) {
     })
         .then (response => response.json ())
 }
+
 
 noteList.addEventListener ('click' , function (event) {
     if (event.target.matches ('#edit')) {
@@ -78,15 +80,16 @@ noteList.addEventListener ('click' , function (event) {
 
 })
 
+
 noteList.addEventListener ('click' , function (event) {
     if (event.target.matches ('#editButton')) {
         let editText = document.querySelector ('.editInput')
         let newText = editText.value 
         let newTextID = event.target.parentElement.dataset.id 
-        // console.log (newText , newTextID)
         editNoteItem (newText , newTextID)
     }
 })
+
 
 function editNoteItem (newText, newTextID) {
     fetch (`http://localhost:3000/notes/${newTextID}` , {
@@ -96,8 +99,6 @@ function editNoteItem (newText, newTextID) {
     })
         .then (response => response.json ()) 
 }
-
-
 
 
 
